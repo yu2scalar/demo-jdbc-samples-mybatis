@@ -2,22 +2,22 @@ package com.example.demo_jdbc_samples.repository;
 
 import com.example.demo_jdbc_samples.exception.CustomException;
 import com.example.demo_jdbc_samples.model.CustomerCustomers;
-import com.example.demo_jdbc_samples.repository.mybatis.CustomerCustomersMapper;
+import com.example.demo_jdbc_samples.repository.mybatis.CustomerCustomersSqlMapper;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
 /**
- * customer.customers with MyBatis (CustomerCustomersMapper). Runs in the caller's transaction
+ * customer.customers with MyBatis (CustomerCustomersSqlMapper). Runs in the caller's transaction
  * (TransactionRunner). Same operations and error codes as the ScalarDB version:
  * get of a missing row 9700, update / delete of a missing row 9100.
  */
 @Repository
 public class CustomerCustomersRepository {
-    private final CustomerCustomersMapper mapper;
+    private final CustomerCustomersSqlMapper mapper;
 
     private int scanLimit = 100; // Default scan limit
 
-    public CustomerCustomersRepository(CustomerCustomersMapper mapper) {
+    public CustomerCustomersRepository(CustomerCustomersSqlMapper mapper) {
         this.mapper = mapper;
     }
 

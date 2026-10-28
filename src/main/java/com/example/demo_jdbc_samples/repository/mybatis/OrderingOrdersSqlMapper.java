@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Update;
  * map-underscore-to-camel-case. The upsert differs per database (databaseId).
  */
 @Mapper
-public interface OrderingOrdersMapper {
+public interface OrderingOrdersSqlMapper {
     String COLUMNS = "order_id, customer_id, created_at, status, total_amount";
 
     @Select("SELECT " + COLUMNS + " FROM ordering.orders WHERE order_id = #{orderId}")

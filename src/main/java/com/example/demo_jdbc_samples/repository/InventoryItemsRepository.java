@@ -2,22 +2,22 @@ package com.example.demo_jdbc_samples.repository;
 
 import com.example.demo_jdbc_samples.exception.CustomException;
 import com.example.demo_jdbc_samples.model.InventoryItems;
-import com.example.demo_jdbc_samples.repository.mybatis.InventoryItemsMapper;
+import com.example.demo_jdbc_samples.repository.mybatis.InventoryItemsSqlMapper;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
 /**
- * inventory.items with MyBatis (InventoryItemsMapper). Runs in the caller's transaction
+ * inventory.items with MyBatis (InventoryItemsSqlMapper). Runs in the caller's transaction
  * (TransactionRunner). Same operations and error codes as the ScalarDB version:
  * get of a missing row 9700, update / delete of a missing row 9100.
  */
 @Repository
 public class InventoryItemsRepository {
-    private final InventoryItemsMapper mapper;
+    private final InventoryItemsSqlMapper mapper;
 
     private int scanLimit = 100; // Default scan limit
 
-    public InventoryItemsRepository(InventoryItemsMapper mapper) {
+    public InventoryItemsRepository(InventoryItemsSqlMapper mapper) {
         this.mapper = mapper;
     }
 

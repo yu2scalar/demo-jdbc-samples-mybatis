@@ -2,22 +2,22 @@ package com.example.demo_jdbc_samples.repository;
 
 import com.example.demo_jdbc_samples.exception.CustomException;
 import com.example.demo_jdbc_samples.model.OrderingOrders;
-import com.example.demo_jdbc_samples.repository.mybatis.OrderingOrdersMapper;
+import com.example.demo_jdbc_samples.repository.mybatis.OrderingOrdersSqlMapper;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
 /**
- * ordering.orders with MyBatis (OrderingOrdersMapper). Runs in the caller's transaction
+ * ordering.orders with MyBatis (OrderingOrdersSqlMapper). Runs in the caller's transaction
  * (TransactionRunner). Same operations and error codes as the ScalarDB version:
  * get of a missing row 9700, update / delete of a missing row 9100.
  */
 @Repository
 public class OrderingOrdersRepository {
-    private final OrderingOrdersMapper mapper;
+    private final OrderingOrdersSqlMapper mapper;
 
     private int scanLimit = 100; // Default scan limit
 
-    public OrderingOrdersRepository(OrderingOrdersMapper mapper) {
+    public OrderingOrdersRepository(OrderingOrdersSqlMapper mapper) {
         this.mapper = mapper;
     }
 

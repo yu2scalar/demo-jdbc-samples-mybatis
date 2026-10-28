@@ -18,8 +18,9 @@ are not here: this version is SQL already.
 
 Apart from the data access, the code is the same as
 `demo-jdbc-samples-jdbctemplate`: the repositories (`repository/*Repository.java`) call
-MyBatis mappers (`repository/mybatis/*Mapper.java`, SQL in `@Select` / `@Insert` /
-`@Update` / `@Delete`). The upsert differs per database and has one statement per
+MyBatis mappers (`repository/mybatis/*SqlMapper.java`, SQL in `@Select` / `@Insert` /
+`@Update` / `@Delete`). They are named `*SqlMapper` to tell them from the DTO converters in
+`mapper/` (`*Mapper.java`), which all the sample versions share. The upsert differs per database and has one statement per
 `databaseId` (`postgresql` / `oracle`, `config/MyBatisConfig.java`).
 
 ## How it differs from the ScalarDB version

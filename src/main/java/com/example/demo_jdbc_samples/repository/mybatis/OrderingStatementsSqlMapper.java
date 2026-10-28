@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Update;
  * (databaseId).
  */
 @Mapper
-public interface OrderingStatementsMapper {
+public interface OrderingStatementsSqlMapper {
     String COLUMNS = "order_id, line_no, item_id, qty, unit_price";
 
     @Select("SELECT " + COLUMNS + " FROM ordering.statements WHERE order_id = #{orderId} AND line_no = #{lineNo}")

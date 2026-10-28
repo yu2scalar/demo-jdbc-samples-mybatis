@@ -52,9 +52,13 @@ public class OrderingStatementsRepository {
         return statements;
     }
 
-    // Upsert Record
+    // Upsert Record: update, or insert if there is no such row. No ON CONFLICT / MERGE, so the
+    // same SQL runs on PostgreSQL, Oracle and through ScalarDB Native JDBC (which refuses them).
+    // A concurrent insert of the same key fails with a duplicate key.
     public OrderingStatements upsertOrderingStatements(OrderingStatements statements) {
-        mapper.upsert(statements);
+        if (mapper.update(statements) == 0) {
+            mapper.insert(statements);
+        }
         return statements;
     }
 

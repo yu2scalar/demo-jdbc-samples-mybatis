@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Update;
 
 /**
  * inventory.items with MyBatis annotations. The columns are mapped to the model by
- * map-underscore-to-camel-case. The upsert differs per database (databaseId).
+ * map-underscore-to-camel-case.
  */
 @Mapper
 public interface InventoryItemsSqlMapper {
@@ -29,15 +29,6 @@ public interface InventoryItemsSqlMapper {
     @Update("UPDATE inventory.items SET name = #{name}, price = #{price}, stock = #{stock} WHERE item_id = #{itemId}")
     int update(InventoryItems items);
 
-    @Insert(databaseId = "postgresql", value = "INSERT INTO inventory.items (" + COLUMNS + ")"
-        + " VALUES (#{itemId}, #{name}, #{price}, #{stock})"
-        + " ON CONFLICT (item_id) DO UPDATE SET name = EXCLUDED.name, price = EXCLUDED.price, stock = EXCLUDED.stock")
-    @Insert(databaseId = "oracle", value = "MERGE INTO inventory.items t"
-        + " USING (SELECT #{itemId} AS item_id, #{name} AS name, #{price} AS price, #{stock} AS stock FROM dual) s"
-        + " ON (t.item_id = s.item_id)"
-        + " WHEN MATCHED THEN UPDATE SET t.name = s.name, t.price = s.price, t.stock = s.stock"
-        + " WHEN NOT MATCHED THEN INSERT (" + COLUMNS + ") VALUES (s.item_id, s.name, s.price, s.stock)")
-    int upsert(InventoryItems items);
 
     @Delete("DELETE FROM inventory.items WHERE item_id = #{itemId}")
     int delete(@Param("itemId") int itemId);
@@ -48,6 +39,7 @@ public interface InventoryItemsSqlMapper {
     @Select("SELECT " + COLUMNS + " FROM inventory.items WHERE item_id = #{itemId} FETCH FIRST #{limit} ROWS ONLY")
     List<InventoryItems> selectByPk(@Param("itemId") int itemId, @Param("limit") int limit);
 
-    @Update("TRUNCATE TABLE inventory.items")
+    // DELETE, not TRUNCATE: ScalarDB Native JDBC refuses TRUNCATE on a ScalarDB table
+    @Delete("DELETE FROM inventory.items")
     void truncate();
 }

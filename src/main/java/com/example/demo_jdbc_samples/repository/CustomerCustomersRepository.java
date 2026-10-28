@@ -60,9 +60,13 @@ public class CustomerCustomersRepository {
         return customers;
     }
 
-    // Upsert Record
+    // Upsert Record: update, or insert if there is no such row. No ON CONFLICT / MERGE, so the
+    // same SQL runs on PostgreSQL, Oracle and through ScalarDB Native JDBC (which refuses them).
+    // A concurrent insert of the same key fails with a duplicate key.
     public CustomerCustomers upsertCustomerCustomers(CustomerCustomers customers) {
-        mapper.upsert(customers);
+        if (mapper.update(customers) == 0) {
+            mapper.insert(customers);
+        }
         return customers;
     }
 

@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 public class MyBatisConfig {
 
     /**
-     * The databaseId follows the database actually connected to. The SQL that differs
-     * between PostgreSQL and Oracle (the upsert) has one statement per databaseId;
-     * everything else (TRUNCATE TABLE, FETCH FIRST n ROWS ONLY, SELECT ... FOR UPDATE,
-     * LIKE) is written once.
+     * The databaseId follows the database actually connected to (also through ScalarDB Native
+     * JDBC, which reports the database's own product name). No statement uses it now: the SQL
+     * is the same for both databases (no upsert statement, DELETE instead of TRUNCATE). It is
+     * kept so that a statement can be given per database (databaseId = "postgresql" / "oracle").
      */
     @Bean
     public DatabaseIdProvider databaseIdProvider(DataSource dataSource) throws SQLException {

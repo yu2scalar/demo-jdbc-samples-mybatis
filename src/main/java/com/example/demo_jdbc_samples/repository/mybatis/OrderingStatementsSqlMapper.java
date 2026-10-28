@@ -11,8 +11,7 @@ import org.apache.ibatis.annotations.Update;
 
 /**
  * ordering.statements with MyBatis annotations (primary key order_id, line_no). The columns
- * are mapped to the model by map-underscore-to-camel-case. The upsert differs per database
- * (databaseId).
+ * are mapped to the model by map-underscore-to-camel-case.
  */
 @Mapper
 public interface OrderingStatementsSqlMapper {
@@ -29,17 +28,6 @@ public interface OrderingStatementsSqlMapper {
         + " WHERE order_id = #{orderId} AND line_no = #{lineNo}")
     int update(OrderingStatements statements);
 
-    @Insert(databaseId = "postgresql", value = "INSERT INTO ordering.statements (" + COLUMNS + ")"
-        + " VALUES (#{orderId}, #{lineNo}, #{itemId}, #{qty}, #{unitPrice})"
-        + " ON CONFLICT (order_id, line_no) DO UPDATE SET item_id = EXCLUDED.item_id, qty = EXCLUDED.qty,"
-        + " unit_price = EXCLUDED.unit_price")
-    @Insert(databaseId = "oracle", value = "MERGE INTO ordering.statements t"
-        + " USING (SELECT #{orderId} AS order_id, #{lineNo} AS line_no, #{itemId} AS item_id, #{qty} AS qty,"
-        + " #{unitPrice} AS unit_price FROM dual) s ON (t.order_id = s.order_id AND t.line_no = s.line_no)"
-        + " WHEN MATCHED THEN UPDATE SET t.item_id = s.item_id, t.qty = s.qty, t.unit_price = s.unit_price"
-        + " WHEN NOT MATCHED THEN INSERT (" + COLUMNS + ")"
-        + " VALUES (s.order_id, s.line_no, s.item_id, s.qty, s.unit_price)")
-    int upsert(OrderingStatements statements);
 
     @Delete("DELETE FROM ordering.statements WHERE order_id = #{orderId} AND line_no = #{lineNo}")
     int delete(@Param("orderId") String orderId, @Param("lineNo") int lineNo);
@@ -52,6 +40,7 @@ public interface OrderingStatementsSqlMapper {
         + " FETCH FIRST #{limit} ROWS ONLY")
     List<OrderingStatements> selectByOrderId(@Param("orderId") String orderId, @Param("limit") int limit);
 
-    @Update("TRUNCATE TABLE ordering.statements")
+    // DELETE, not TRUNCATE: ScalarDB Native JDBC refuses TRUNCATE on a ScalarDB table
+    @Delete("DELETE FROM ordering.statements")
     void truncate();
 }

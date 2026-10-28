@@ -60,9 +60,13 @@ public class InventoryItemsRepository {
         return items;
     }
 
-    // Upsert Record
+    // Upsert Record: update, or insert if there is no such row. No ON CONFLICT / MERGE, so the
+    // same SQL runs on PostgreSQL, Oracle and through ScalarDB Native JDBC (which refuses them).
+    // A concurrent insert of the same key fails with a duplicate key.
     public InventoryItems upsertInventoryItems(InventoryItems items) {
-        mapper.upsert(items);
+        if (mapper.update(items) == 0) {
+            mapper.insert(items);
+        }
         return items;
     }
 
